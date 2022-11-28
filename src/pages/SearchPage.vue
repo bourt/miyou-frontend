@@ -3,8 +3,7 @@
         <van-search v-model="value" shape="round" placeholder="请输入要搜索的标签" @search="onSearch" />
     </div>
     <div class="selected-tags">
-        <span :style="item.color" v-for="item in selectedTag" :key="item.id" @click="onDelTag(item.id)">{{ item.text
-        }}</span>
+        <span :style="item.color" v-for="item in selectedTag" :key="item.id" @click="onDelTag(item.id)">{{ item.text }}</span>
     </div>
     <div class="select-tags-head">
         <div class="refreshTag" @click="refTag">
@@ -13,9 +12,7 @@
     </div>
     <div class="select-tags">
         <span :style="item.color" :name="item.id" v-for="item in selectTag" :key="item.id"
-            @click="onClickTags(item.id)">{{
-        item.text
-            }}</span>
+            @click="onClickTags(item.id)">{{ item.text }}</span>
     </div>
 </template>
 
@@ -63,7 +60,7 @@ let tagsList = [
     }
 ]
 // 存放随机颜色
-const color = ["#e03997", "#00b5ad", "#f2711c", "#a333c8", "#21ba45", "#db2828"]
+const color: string[] = ["#e03997", "#00b5ad", "#f2711c", "#a333c8", "#21ba45", "#db2828"]
 // 存放扁平化的tagsListSon
 let copyTagsSon = reactive(tagsList.flatMap(p => p.children));
 
@@ -137,11 +134,13 @@ const onSearch = () => {
         copyFlatList.push(item)
     })
     selectTag.splice(0, selectTag.length);
-    let searchList = copyTagsSon.filter((item) => {
+    let searchList = copyFlatList.filter((item) => {
         if (item.text.indexOf(value.value) !== -1) {
             return item
         }
     })
+    console.log(searchList.length);
+
     let arr = searchList.concat(copyFlatList).filter(itemAll => {
         let searchListRes: number = 0
         for (let item of searchList) {
@@ -166,13 +165,13 @@ const onSearch = () => {
     })
 }
 
-const show = ref(true);
-const close = () => {
-    show.value = false;
-};
+// const show = ref(true);
+// const close = () => {
+//     show.value = false;
+// };
 </script>
 
-<style>
+<style scoped>
 .header {
     width: 100%;
 }

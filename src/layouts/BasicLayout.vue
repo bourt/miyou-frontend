@@ -26,8 +26,6 @@ const onClickRight = () => {
 };
 const active = ref("home");
 let contentHeight = ref("height:" + (document.documentElement?.clientHeight - 96) + "px");
-
-
 </script>
     
 <style scoped>

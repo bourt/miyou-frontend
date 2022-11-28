@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="team-content">
-                <div class="team" v-for="item, index in teamList" :key="index">
+                <div class="team" v-for="(item, index) in teamList" :key="index">
                     <div class="team-left">
                         <div class="team-left-top">
                             <div class="team-l-l">
@@ -208,7 +208,9 @@ const onSearch = () => {
 }
 
 .team-left-bottom {
+    width: 100%;
     display: flex;
+    justify-content: center;
     flex-flow: column;
     font-size: 12px;
 }
@@ -219,6 +221,12 @@ const onSearch = () => {
 
 .team-left-bottom .team-status {
     margin-top: 10px;
+}
+
+.team-status {
+    padding: 0 20px 0 0;
+    display: flex;
+    justify-content: space-between;
 }
 
 .team-status span {
@@ -271,11 +279,11 @@ const onSearch = () => {
     display: flex;
     align-items: center;
     flex-direction: column;
-    font-size: 12px;
+    font-size: 10px;
     white-space: nowrap;
 }
 
-.clear-team img {
-    width: 26px;
+.team-control>div>img {
+    margin-bottom: 5px;
 }
 </style>

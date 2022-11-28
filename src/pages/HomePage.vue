@@ -1,6 +1,6 @@
 <template>
     <div class="homeContainer">
-        <div class="user" v-for="item, index in userList" :key="index">
+        <div class="user" v-for="(item, index) in userList" :key="index">
             <div class="user-bgc">
                 <img :src="item.avatar" alt="">
             </div>
