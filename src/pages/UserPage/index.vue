@@ -2,11 +2,11 @@
   <header class="login-header">
     <div class="avatar-border">
       <div class="avatar-container">
-        <img alt="" src="/src/pages/images/avatar-default.png">
+        <img alt="" src="/src/assets/default-avatar.png">
       </div>
     </div>
     <div class="login">
-      <button class="login-btn">登录/注册</button>
+      <router-link class="login-btn" to="/login">登录/注册</router-link>
       <span class="login-msg">登录即可为您匹配用户啦</span>
     </div>
   </header>
@@ -53,11 +53,14 @@
 }
 
 .login .login-btn {
+  box-sizing: border-box;
+  display: block;
   margin-bottom: 5px;
   padding: 7px 14px 5px;
   width: 90px;
   background-color: var(--main-color);
   font-size: 14px;
+  color: #fff;
   border: 0;
   border-radius: 50px;
 }

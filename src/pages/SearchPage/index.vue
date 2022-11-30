@@ -5,14 +5,16 @@
     <div class="selected-tags">
         <span :style="item.color" v-for="item in selectedTag" :key="item.id" @click="onDelTag(item.id)">{{ item.text }}</span>
     </div>
-    <div class="select-tags-head">
+    <div class="select-tags-container">
+      <div class="select-tags-head">
         <div class="refreshTag" @click="refTag">
-            <img src="./images/refresh.png" alt="">
+          <img src="./images/refresh.png" alt="">
         </div>
-    </div>
-    <div class="select-tags">
+      </div>
+      <div class="select-tags">
         <span :style="item.color" :name="item.id" v-for="item in selectTag" :key="item.id"
-            @click="onClickTags(item.id)">{{ item.text }}</span>
+              @click="onClickTags(item.id)">{{ item.text }}</span>
+      </div>
     </div>
 </template>
 
@@ -196,6 +198,9 @@ const onSearch = () => {
     font-weight: 700;
     border-radius: 100px;
     letter-spacing: 0.1em;
+}
+
+.select-tags-container {
 }
 
 .select-tags-head {
