@@ -55,5 +55,7 @@ let active = ref("home")
 </script>
     
 <style scoped>
-
+  .content {
+    position: relative;
+  }
 </style>

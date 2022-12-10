@@ -1,5 +1,8 @@
 <template>
   <div class="team-container">
+    <router-link class="add-team" to="/add-team">
+      <img src="./images/addteam.png" alt="">
+    </router-link>
     <div class="team-search">
       <van-search v-model="value" shape="round" placeholder="请输入队伍名称" @search="onSearch"/>
     </div>
@@ -55,8 +58,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="new-team">
     </div>
   </div>
 </template>
@@ -122,6 +123,20 @@ const onSearch = () => {
 </script>
 
 <style scoped>
+.add-team {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ddd;
+}
+
 .setWay-container {
   margin-top: 10px;
   padding: 0 10px;
@@ -310,7 +325,8 @@ const onSearch = () => {
   display: flex;
   align-items: center;
   flex-direction: column;
-  font-size: 10px;
+  font-size: 12px;
+  color: #888;
   white-space: nowrap;
 }
 

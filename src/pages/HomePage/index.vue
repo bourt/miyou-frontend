@@ -95,7 +95,12 @@ let userList = [
   height: 110px;
   background-color: #ffffff;
   border-radius: 10px;
+  box-shadow: 0 0 5px #eee;
   overflow: hidden;
+}
+
+.user:last-child {
+  margin-bottom: 10px;
 }
 
 .user-bgc {

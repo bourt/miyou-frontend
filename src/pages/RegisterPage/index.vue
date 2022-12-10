@@ -8,16 +8,16 @@
       <h2 class="login-title">REGISTER</h2>
       <form class="my-login">
         <div class="my-username my-loginInput">
-          <input type="text" placeholder="用户名">
+          <input type="text" placeholder="用户名" v-model="registerData.userAccount">
         </div>
         <div class="my-password my-loginInput">
-          <input type="text" placeholder="密码">
+          <input type="text" placeholder="密码" v-model="registerData.userPassword">
         </div>
         <div class="my-password my-loginInput">
-          <input type="text" placeholder="确认密码">
+          <input type="text" placeholder="确认密码" v-model="registerData.checkPassword">
         </div>
       </form>
-      <div class="my-btn">
+      <div class="my-btn" @click="handlerRegister">
         <button type="button">注册</button>
       </div>
       <div class="login-other">
@@ -28,6 +28,31 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+
+let registerData = {
+  userAccount: "",
+  userPassword: "",
+  checkPassword: "",
+  planetCode: "",
+}
+
+// 点击注册按钮调用的函数
+function handlerRegister() {
+  let {userAccount, userPassword, checkPassword, planetCode} = registerData
+  axios.post('http://localhost:8080/api/user/register', {
+    checkPassword,
+    planetCode,
+    userAccount,
+    userPassword
+  })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
 </script>
 
 <style scoped>

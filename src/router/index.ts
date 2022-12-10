@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import home from '../pages/HomePage/index.vue'
 const home = () => import('../pages/HomePage/index.vue')
 import team from '../pages/TeamPage/index.vue'
+const addTeam = () => import('../pages/TeamPage/AddTeamPage.vue')
 import user from '../pages/UserPage/index.vue'
 const search = () => import('../pages/SearchPage/index.vue')
 const login = () => import('../pages/LoginPage/index.vue')
@@ -19,6 +20,12 @@ const routes = [
         name: 'team',
         component: team,
         meta: { title: "队伍页" }
+    },
+    {
+      path: '/add-team',
+      name: 'add-team',
+      component: addTeam,
+      meta: { title: "创建队伍" }
     },
     {
         path: '/user',
