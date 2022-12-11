@@ -8,14 +8,14 @@
       <h2 class="login-title">LOGIN</h2>
       <form class="my-login">
         <div class="my-username my-loginInput">
-          <input type="text" placeholder="用户名">
+          <input type="text" placeholder="用户名" v-model="loginData.userAccount">
         </div>
         <div class="my-password my-loginInput">
-          <input type="text" placeholder="密码">
+          <input type="password" placeholder="密码" v-model="loginData.userPassword">
         </div>
       </form>
       <div class="my-btn">
-        <button type="button">登录</button>
+        <button type="button" @click="userLogin">登录</button>
       </div>
       <div class="login-other">
         <router-link class="login-other-l" to="/register">没有账号?立即注册</router-link>
@@ -26,6 +26,40 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRouter } from "vue-router"
+import axios from "axios"
+
+const route = useRoute()
+const router = useRouter()
+
+let loginData = {
+  userAccount: route.query.userAccount ? route.query.userAccount : "",
+  userPassword: ""
+}
+
+function userLogin () {
+  let { userAccount, userPassword } = loginData
+  axios({
+    method: "post",
+    url: "http://127.0.0.1:8080/api/user/login",
+    data: {
+      userAccount,
+      userPassword
+    }
+  })
+      .then(function(response) {
+        console.log(response.data)
+        if(response.data.isLogin === "login") {
+          router.push({
+            path: "/user",
+            name: "user"
+          })
+        }
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+}
 </script>
 
 <style scoped>

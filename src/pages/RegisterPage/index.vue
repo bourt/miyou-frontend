@@ -11,10 +11,10 @@
           <input type="text" placeholder="用户名" v-model="registerData.userAccount">
         </div>
         <div class="my-password my-loginInput">
-          <input type="text" placeholder="密码" v-model="registerData.userPassword">
+          <input type="password" placeholder="密码" v-model="registerData.userPassword">
         </div>
         <div class="my-password my-loginInput">
-          <input type="text" placeholder="确认密码" v-model="registerData.checkPassword">
+          <input type="password" placeholder="确认密码" v-model="registerData.checkPassword">
         </div>
       </form>
       <div class="my-btn" @click="handlerRegister">
@@ -29,25 +29,54 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 let registerData = {
   userAccount: "",
   userPassword: "",
-  checkPassword: "",
-  planetCode: "",
+  checkPassword: ""
 }
 
 // 点击注册按钮调用的函数
 function handlerRegister() {
-  let {userAccount, userPassword, checkPassword, planetCode} = registerData
-  axios.post('http://localhost:8080/api/user/register', {
-    checkPassword,
-    planetCode,
-    userAccount,
-    userPassword
+  let {userAccount, userPassword, checkPassword} = registerData
+
+  if(userAccount.length <= 4) {
+    console.log("用户名错误");
+    return;
+  }
+
+  if(userPassword.length <= 8) {
+    console.log("密码错误");
+    return;
+  }
+
+  if(checkPassword !== userPassword) {
+    console.log("确认密码错误");
+    return;
+  }
+
+  axios({
+    method: 'post',
+    url: 'http://127.0.0.1:8080/api/user/register',
+    data: {
+      userAccount,
+      userPassword,
+      checkPassword
+    }
   })
       .then(function (response) {
-        console.log(response);
+        if(response.status === 200) {
+          console.log(response);
+          router.push({
+            path: '/login',
+            query: {
+              userAccount
+            }
+          });
+        }
       })
       .catch(function (error) {
         console.log(error);
