@@ -26,11 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router"
-import axios from "axios"
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/utils/axios";
+import { useStore } from '@/store/index';
+import { type UserInfo } from '@/api/user';
 
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 
 let loginData = {
   userAccount: route.query.userAccount ? route.query.userAccount : "",
@@ -41,20 +44,19 @@ function userLogin () {
   let { userAccount, userPassword } = loginData
   axios({
     method: "post",
-    url: "http://127.0.0.1:8080/api/user/login",
+    url: "/user/login",
     data: {
       userAccount,
       userPassword
     }
   })
       .then(function(response) {
-        console.log(response.data)
-        if(response.data.isLogin === "login") {
-          router.push({
-            path: "/user",
-            name: "user"
-          })
-        }
+        console.log(response)
+        router.push({
+          path: "/user",
+          name: "user"
+        })
+        store.addUser(response as unknown as UserInfo)
       })
       .catch(function(error) {
         console.log(error)

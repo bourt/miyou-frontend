@@ -17,6 +17,7 @@ html {overflow-y: scroll;}
   --main-font-color: rgba(0, 0, 0, 0.8);
   --van-nav-bar-text-color: #fbc002 !important;
   --van-nav-bar-icon-color: #fbc002 !important;
+  --van-cell-group-inset-padding: 10px !important;
 }
 
 body {

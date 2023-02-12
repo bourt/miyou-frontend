@@ -1,28 +1,65 @@
 <template>
-  <header class="login-header">
+  <header class="user-header">
     <div class="avatar-border">
-      <div class="avatar-container">
+      <div class="avatar-container" @click="handlerRevise(isLogin)">
         <img alt="" src="/src/assets/default-avatar.png">
       </div>
     </div>
-    <div class="login">
-      <router-link class="login-btn" to="/login">登录/注册</router-link>
-      <span class="login-msg">登录即可为您匹配用户啦</span>
+    <div class="user-info">
+      <div class="not-login" v-if="!isLogin">
+        <router-link class="login-btn" to="/login">登录/注册</router-link>
+        <span class="login-msg">登录即可为您匹配用户啦</span>
+      </div>
+      <div class="is-login" v-else>
+        <h2 class="username">{{ userData.username || userData.userAccount }}</h2>
+      </div>
     </div>
   </header>
-  <section>
-
+  <section class="user-info-container">
+    <van-cell-group inset>
+      <van-cell title="性别" :value="userData.gender || '未设置'" />
+      <van-cell title="电话" :value="userData.phone || '未设置'" />
+      <van-cell title="邮箱" :value="userData.email || '未设置'" />
+      <van-cell title="编号" :value="userData.planetCode || '未设置'" />
+    </van-cell-group>
   </section>
 </template>
 
 <script lang="ts" setup>
+import { ref, reactive, Ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from '@/store/index'
+
+const router = useRouter()
+const store = useStore()
+
+let userData = reactive(store.userData)
+console.log(userData)
+
+let isLogin: Ref<boolean> = ref(false)
+
+// 修改用户数据函数
+const handlerRevise = (isLogin: boolean) => {
+  if (!isLogin) {
+    return
+  }
+  router.push({
+    path: "/user-modify"
+  })
+}
+
+if(Object.keys(userData).length) {
+  isLogin.value = true;
+} else {
+  console.log("登录前")
+}
 </script>
 
 <style scoped>
-.login-header {
+.user-header {
   display: flex;
-  align-items: center;
   padding: 20px;
+  margin-bottom: 10px;
   background-color: #fff;
 }
 
@@ -46,13 +83,24 @@
   width: 100%;
 }
 
-.login {
-  display: flex;
-  flex-direction: column;
+.user-info {
   margin-left: 20px;
+  height: 60px;
 }
 
-.login .login-btn {
+.user-info .not-login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: inherit;
+}
+
+.user-info .is-login {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.user-info .login-btn {
   box-sizing: border-box;
   display: block;
   margin-bottom: 5px;
@@ -65,8 +113,13 @@
   border-radius: 50px;
 }
 
-.login .login-msg {
+.user-info .login-msg {
   font-size: 12px;
   color: #999;
+}
+
+.is-login username {
+  font-size: 28px;
+  color: #000;
 }
 </style>

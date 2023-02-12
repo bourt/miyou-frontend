@@ -9,8 +9,11 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SaveBtn: typeof import('./src/components/SaveBtn/index.vue')['default']
     VanCalendar: typeof import('vant/es')['Calendar']
     VanCell: typeof import('vant/es')['Cell']
+    VanCellGroup: typeof import('vant/es')['CellGroup']
+    VanField: typeof import('vant/es')['Field']
     VanIcon: typeof import('vant/es')['Icon']
     VanNavBar: typeof import('vant/es')['NavBar']
     VanSearch: typeof import('vant/es')['Search']

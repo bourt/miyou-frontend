@@ -1,9 +1,7 @@
 <style scoped>
 .tag-page-container {
   box-sizing: border-box;
-  height: 100%;
   background-color: #f6f6f6;
-  overflow-y: scroll;
 }
 
 .header {
@@ -142,6 +140,7 @@
       </div>
     </div>
   </div>
+  <SaveBtn title="确认搜索"/>
 </template>
 
 <script setup lang="ts">

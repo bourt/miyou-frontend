@@ -16,12 +16,26 @@
 
 <script setup lang="ts">
 import { ref, Ref, watch } from "vue";
-import router from "../router/index"
-import { useRoute } from "vue-router"
+import router from "@/router/index";
+import { useRoute, useRouter } from "vue-router";
+import {getToken} from "@/utils/index";
 
 let miyouTitle: Ref<string> = ref("miyou")
 
 const route = useRoute()
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  if (to.path == '/login') {
+    // 如果要去路径是 /login 则正常执行
+    next()
+  } else {
+    if(Boolean(getToken('token'))){
+      next()
+    }else {
+      next()
+    }
+  }
+})
 // 监听路由变化
 watch(() => route.path, () => {
   miyouTitle.value = route.meta.title as string
@@ -57,5 +71,6 @@ let active = ref("home")
 <style scoped>
   .content {
     position: relative;
+    overflow-y: scroll;
   }
 </style>

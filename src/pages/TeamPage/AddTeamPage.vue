@@ -126,8 +126,9 @@
     background-color: #777;
   }
 
-  .select-max-people>input {
+  .select-max-people>div {
     margin: 0 5px;
+    padding: 10px 0;
     width: 100%;
     font-size: 12px;
     text-align: center;
@@ -159,26 +160,9 @@
     font-weight: bold;
   }
 
-  .confirm-create-team {
-    box-sizing: border-box;
-    position: fixed;
-    left: 0;
-    bottom: 50px;
-    padding: 0 20px;
-    width: 100%;
-    height: 40px;
+  .team-password {
+    margin-top: 14px;
   }
-
-  .confirm-create-team>button {
-    width: 100%;
-    height: 35px;
-    background-color: var(--main-color);
-    color: #fff;
-    border: 0;
-    border-radius: 35px;
-    letter-spacing: 0.1rem;
-  }
-
 </style>
 <template>
   <div class="add-team-container">
@@ -191,10 +175,10 @@
         <div class="txt">MAIN</div>
       </div>
       <div class="team-name team-input">
-        <input type="text" placeholder="* 请输入队伍名">
+        <input type="text" placeholder="* 请输入队伍名" v-model="addTeamForm.name">
       </div>
       <div class="team-comment team-input">
-        <input type="text" placeholder="* 请输入队伍描述">
+        <input type="text" placeholder="* 请输入队伍描述" v-model="addTeamForm.description">
       </div>
       <div class="bar-txt">
         <div class="bar"></div>
@@ -208,9 +192,9 @@
         </div>
         <span class="other-head">最大人数</span>
         <div class="select-max-people">
-          <button></button>
-          <input type="text" value="0">
-          <button></button>
+          <button @click="reduceNum"></button>
+          <div>{{ addTeamForm.maxNum }}</div>
+          <button @click="addNum"></button>
         </div>
         <span class="other-head">队伍状态</span>
         <div class="team-status">
@@ -218,23 +202,70 @@
           <div>私有</div>
           <div>加密</div>
         </div>
+        <div class="team-password team-input" v-show="true">
+          <input type="password" placeholder="* 请输入队伍密码" v-model="addTeamForm.password">
+        </div>
       </div>
     </div>
-    <div class="confirm-create-team">
-      <button>创建队伍</button>
-    </div>
+    <SaveBtn title="创建队伍" @click="createTeam"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import axios from '@/utils/axios';
+import {type AddTeam} from '@/api/team';
+import {useStore} from "@/store";
+
+const store = useStore();
+
+console.log(store.userData.id)
 
 const date = ref('请选择过期时间');
-const show = ref(false);
 
+let teamStatus = 0;
+// 收集添加团队数据
+const addTeamForm: AddTeam = reactive({
+  "description": "",
+  "expireTime": date.value,
+  "maxNum": 0,
+  "name": "",
+  "password": "",
+  "status": teamStatus,
+  "userId": store.userData.id
+})
+// 创建团队按钮点击事件函数
+const createTeam = async () => {
+  axios.post('/team/add',{
+    ...addTeamForm
+  })
+}
+
+// 增加最大人数事件处理函数
+const addNum = () => {
+  if(addTeamForm.maxNum < 5) {
+    addTeamForm.maxNum++;
+  } else {
+    addTeamForm.maxNum = 5;
+    alert("已达最大人数");
+  }
+
+}
+// 减少最大人数事件处理函数
+const reduceNum = () => {
+  if(addTeamForm.maxNum > 1) {
+    addTeamForm.maxNum--;
+  }else {
+    addTeamForm.maxNum = 1;
+    alert("已达最小人数");
+  }
+}
+
+const show = ref(false);
 const formatDate = (date: Date) => `${date.getMonth() + 1}/${date.getDate()}`;
 const onConfirm = (value: Date) => {
   show.value = false;
   date.value = formatDate(value);
 };
+
 </script>

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import home from '../pages/HomePage/index.vue'
-const home = () => import('../pages/HomePage/index.vue')
-import team from '../pages/TeamPage/index.vue'
-const addTeam = () => import('../pages/TeamPage/AddTeamPage.vue')
-import user from '../pages/UserPage/index.vue'
-const search = () => import('../pages/SearchPage/index.vue')
-const login = () => import('../pages/LoginPage/index.vue')
-const register = () => import('../pages/RegisterPage/index.vue')
+const home = () => import('@/pages/HomePage/index.vue')
+const team = () => import('@/pages/TeamPage/index.vue')
+const addTeam = () => import('@/pages/TeamPage/AddTeamPage.vue')
+const user = () => import('@/pages/UserPage/index.vue')
+const userModify = () => import('@/pages/UserInfoPage/index.vue')
+const search = () => import('@/pages/SearchPage/index.vue')
+const login = () => import('@/pages/LoginPage/index.vue')
+const register = () => import('@/pages/RegisterPage/index.vue')
 
 const routes = [
     {
@@ -22,16 +22,22 @@ const routes = [
         meta: { title: "队伍页" }
     },
     {
-      path: '/add-team',
-      name: 'add-team',
-      component: addTeam,
-      meta: { title: "创建队伍" }
+        path: '/add-team',
+        name: 'add-team',
+        component: addTeam,
+        meta: { title: "创建队伍" }
     },
     {
         path: '/user',
         name: 'user',
         component: user,
         meta: { title: "用户页" }
+    },
+    {
+        path: '/user-modify',
+        name: 'user-modify',
+        component: userModify,
+        meta: { title: "更新信息"}
     },
     {
         path: '/search',

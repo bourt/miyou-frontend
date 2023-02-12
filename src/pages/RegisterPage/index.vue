@@ -68,15 +68,12 @@ function handlerRegister() {
     }
   })
       .then(function (response) {
-        if(response.status === 200) {
-          console.log(response);
-          router.push({
-            path: '/login',
-            query: {
-              userAccount
-            }
-          });
-        }
+        router.push({
+          path: '/login',
+          query: {
+            userAccount
+          }
+        });
       })
       .catch(function (error) {
         console.log(error);

@@ -4,14 +4,14 @@
       <img src="./images/addteam.png" alt="">
     </router-link>
     <div class="team-search">
-      <van-search v-model="value" shape="round" placeholder="请输入队伍名称" @search="onSearch"/>
+      <van-search v-model="value" shape="round" placeholder="请输入队伍名称" @search="onSearch" />
     </div>
     <div class="setWay-container">
       <div class="setWay">
-                <span class="way-title">
-                    <img src="./images/modul.png" alt="">
-                    <span>请选择队伍模式</span>
-                </span>
+        <span class="way-title">
+          <img src="./images/modul.png" alt="">
+          <span>请选择队伍模式</span>
+        </span>
         <div class="public-private">
           <span :class="isChangeColor ? 'pub-pri-Bgc' : `public`" @click="changeBgc(true)">公开</span>
           <span :class="isChangeColor ? 'private' : 'pub-pri-Bgc'" @click="changeBgc(false)">加密</span>
@@ -22,7 +22,7 @@
           <div class="team-left">
             <div class="team-left-top">
               <div class="team-l-l">
-                <img :src="item.teamAvatar" alt=""/>
+                <img :src="item.teamAvatar" alt="" />
               </div>
               <div class="team-l-r">
                 <div class="team-title">
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 
 interface Team {
   teamAvatar: string;
@@ -130,8 +130,8 @@ const onSearch = () => {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 0 4px #ddd;
@@ -263,7 +263,7 @@ const onSearch = () => {
   font-size: 12px;
 }
 
-.team-left-bottom > div {
+.team-left-bottom>div {
   margin-top: 4px;
 }
 
@@ -330,7 +330,7 @@ const onSearch = () => {
   white-space: nowrap;
 }
 
-.team-control > div > img {
+.team-control>div>img {
   margin-bottom: 5px;
 }
 </style>
