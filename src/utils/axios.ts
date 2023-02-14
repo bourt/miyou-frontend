@@ -6,9 +6,10 @@ axios.defaults.baseURL = "http://localhost:8080/api";
 
 axios.interceptors.response.use(
     (response: AxiosResponse) => {
+        console.log("服务端响应数据", response)
         const data = response.data.data;
         const code = response.data.code;
-        if(code == 200) {
+        if(code === 0 || code === 200) {
             console.log('成功，返回数据中···')
             return data
         } else {
@@ -27,7 +28,7 @@ axios.interceptors.response.use(
                 case 404:
                     err = '没有找到'
                 default:
-                    err = '未知错误'
+                    err = code;
                     break
             }
             alert(err)

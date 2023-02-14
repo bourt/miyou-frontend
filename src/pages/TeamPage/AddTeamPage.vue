@@ -155,7 +155,7 @@
     border-radius: 5px;
   }
 
-  .team-status div:nth-child(1) {
+  .team-status>.activeStatus {
     border: 2px solid var(--main-color);
     font-weight: bold;
   }
@@ -198,11 +198,9 @@
         </div>
         <span class="other-head">队伍状态</span>
         <div class="team-status">
-          <div>公开</div>
-          <div>私有</div>
-          <div>加密</div>
+          <div :class="item[1]" v-for="(item, index) in teamStatus" @click="selectTeamStatus(index)">{{ item[0] }}</div>
         </div>
-        <div class="team-password team-input" v-show="true">
+        <div class="team-password team-input" v-show="isEncryption">
           <input type="password" placeholder="* 请输入队伍密码" v-model="addTeamForm.password">
         </div>
       </div>
@@ -212,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, Ref, reactive, watch } from "vue";
 import axios from '@/utils/axios';
 import {type AddTeam} from '@/api/team';
 import {useStore} from "@/store";
@@ -223,19 +221,8 @@ console.log(store.userData.id)
 
 const date = ref('请选择过期时间');
 
-let teamStatus = 0;
-// 收集添加团队数据
-const addTeamForm: AddTeam = reactive({
-  "description": "",
-  "expireTime": date.value,
-  "maxNum": 0,
-  "name": "",
-  "password": "",
-  "status": teamStatus,
-  "userId": store.userData.id
-})
 // 创建团队按钮点击事件函数
-const createTeam = async () => {
+const createTeam = () => {
   axios.post('/team/add',{
     ...addTeamForm
   })
@@ -251,6 +238,7 @@ const addNum = () => {
   }
 
 }
+
 // 减少最大人数事件处理函数
 const reduceNum = () => {
   if(addTeamForm.maxNum > 1) {
@@ -261,6 +249,31 @@ const reduceNum = () => {
   }
 }
 
+// 当前状态
+let nowStatus = ref(0);
+
+// 监听当前状态改变
+watch(nowStatus, (newValue, oldValue) => {
+  teamStatus[oldValue][1] = '';
+  teamStatus[newValue][1] = 'activeStatus';
+})
+
+// 状态列表
+let teamStatus = reactive([
+  ["公开", 'activeStatus'],
+  ["私有", ''],
+  ["加密", '']
+])
+
+// 确定是否为加密房间
+let isEncryption: Ref<boolean> = ref(false);
+
+// 选择房间状态
+const selectTeamStatus = (status: number) => {
+  nowStatus.value = status;
+  status ===0 ? isEncryption.value = false : isEncryption.value = true;
+}
+
 const show = ref(false);
 const formatDate = (date: Date) => `${date.getMonth() + 1}/${date.getDate()}`;
 const onConfirm = (value: Date) => {
@@ -268,4 +281,14 @@ const onConfirm = (value: Date) => {
   date.value = formatDate(value);
 };
 
+// 收集添加团队数据
+const addTeamForm: AddTeam = reactive({
+  "description": "",
+  "expireTime": date.value,
+  "maxNum": 1,
+  "name": "",
+  "password": "",
+  "status": nowStatus.value,
+  "userId": store.userData.id
+})
 </script>

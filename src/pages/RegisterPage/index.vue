@@ -28,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
+// import axios from "axios";
+import axios from '@/utils/axios'
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -60,7 +61,7 @@ function handlerRegister() {
 
   axios({
     method: 'post',
-    url: 'http://127.0.0.1:8080/api/user/register',
+    url: '/user/register',
     data: {
       userAccount,
       userPassword,
