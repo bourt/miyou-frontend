@@ -9,7 +9,7 @@ img { border:none; }
 ol,ul,li { list-style:none; }
 input, textarea, select, button { font:14px Verdana,Helvetica,Arial,sans-serif; }
 table { border-collapse:collapse; }
-html {overflow-y: scroll;}
+html {overflow-y: auto;}
 :root {
   font-weight: 400;
   line-height: 1;

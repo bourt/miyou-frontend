@@ -15,27 +15,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from "vue";
+import { ref, Ref, watch, onMounted } from "vue";
 import router from "@/router/index";
-import { useRoute, useRouter } from "vue-router";
-import {getToken} from "@/utils/index";
+import { useRoute } from "vue-router";
+
+// 初始化内容区域的高度
+let contentHeight = ref("height:" + (document.documentElement?.clientHeight - 96) + "px");
+// 屏幕改变时返回新值
+onMounted(()=> {
+  window.onresize = () => {
+    contentHeight.value = "height:" + (document.documentElement?.clientHeight - 96) + "px"
+  }
+})
 
 let miyouTitle: Ref<string> = ref("miyou")
 
 const route = useRoute()
-// 路由守卫
-router.beforeEach((to, from, next) => {
-  if (to.path == '/login') {
-    // 如果要去路径是 /login 则正常执行
-    next()
-  } else {
-    if(Boolean(getToken('token'))){
-      next()
-    }else {
-      next()
-    }
-  }
-})
+
 // 监听路由变化
 watch(() => route.path, () => {
   miyouTitle.value = route.meta.title as string
@@ -54,9 +50,6 @@ watch(() => route.path, () => {
   }
 });
 
-// 初始化内容区域的高度
-let contentHeight = ref("height:" + (document.documentElement?.clientHeight - 96) + "px");
-
 // navBar左右两边的按钮事件
 const onClickLeft = () => history.back();
 const onClickRight = () => {
@@ -71,6 +64,6 @@ let active = ref("home")
 <style scoped>
   .content {
     position: relative;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 </style>

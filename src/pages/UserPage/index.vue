@@ -11,7 +11,7 @@
         <span class="login-msg">登录即可为您匹配用户啦</span>
       </div>
       <div class="is-login" v-else>
-        <h2 class="username">{{ userData.username || userData.userAccount }}</h2>
+        <h2 class="username"><i>Hi，</i>{{ userData.username || userData.userAccount }}</h2>
       </div>
     </div>
   </header>
@@ -34,7 +34,6 @@ const router = useRouter()
 const store = useStore()
 
 let userData = reactive(store.userData)
-console.log(userData)
 
 let isLogin: Ref<boolean> = ref(false)
 
@@ -50,8 +49,6 @@ const handlerRevise = (isLogin: boolean) => {
 
 if(Object.keys(userData).length) {
   isLogin.value = true;
-} else {
-  console.log("登录前")
 }
 </script>
 
@@ -118,8 +115,13 @@ if(Object.keys(userData).length) {
   color: #999;
 }
 
-.is-login username {
-  font-size: 28px;
+.is-login .username {
+  font-size: 18px;
   color: #000;
+}
+
+.is-login .username i {
+  color: var(--main-color);
+  font-weight: bold;
 }
 </style>

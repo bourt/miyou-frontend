@@ -221,13 +221,6 @@ console.log(store.userData.id)
 
 const date = ref('请选择过期时间');
 
-// 创建团队按钮点击事件函数
-const createTeam = () => {
-  axios.post('/team/add',{
-    ...addTeamForm
-  })
-}
-
 // 增加最大人数事件处理函数
 const addNum = () => {
   if(addTeamForm.maxNum < 5) {
@@ -291,4 +284,11 @@ const addTeamForm: AddTeam = reactive({
   "status": nowStatus.value,
   "userId": store.userData.id
 })
+
+// 创建团队按钮点击事件函数
+const createTeam = () => {
+  axios.post('/team/add',{
+    ...addTeamForm
+  })
+}
 </script>

@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import {getToken} from "@/utils";
 const home = () => import('@/pages/HomePage/index.vue')
 const team = () => import('@/pages/TeamPage/index.vue')
 const addTeam = () => import('@/pages/TeamPage/AddTeamPage.vue')
 const user = () => import('@/pages/UserPage/index.vue')
-const userModify = () => import('@/pages/UserInfoPage/index.vue')
+const userModify = () => import('@/pages/ModifyInfoPage/index.vue')
 const search = () => import('@/pages/SearchPage/index.vue')
 const login = () => import('@/pages/LoginPage/index.vue')
 const register = () => import('@/pages/RegisterPage/index.vue')
@@ -62,6 +63,20 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+})
+
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+    if (to.path == '/login' || to.path == '/register') {
+        // 如果要去路径是 /login 则正常执行
+        next()
+    } else {
+        if(Boolean(getToken('token'))){
+            next()
+        }else {
+            next()
+        }
+    }
 })
 
 export default router

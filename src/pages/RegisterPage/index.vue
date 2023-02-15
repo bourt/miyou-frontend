@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container-bg">
+  <div class="login-container-bg" @keydown="handlerRegister($event)">
     <div class="login-container">
       <div class="bg-pattern">
         <div></div>
@@ -28,57 +28,52 @@
 </template>
 
 <script setup lang="ts">
-// import axios from "axios";
+import { reactive } from 'vue';
 import axios from '@/utils/axios'
 import {useRouter} from "vue-router";
 
 const router = useRouter()
 
-let registerData = {
+const registerData = reactive({
   userAccount: "",
   userPassword: "",
   checkPassword: ""
-}
+})
 
 // 点击注册按钮调用的函数
-function handlerRegister() {
-  let {userAccount, userPassword, checkPassword} = registerData
+function handlerRegister(event: any) {
+  if(event.keyCode === 13 || !event.keyCode) {
+    let {userAccount, userPassword, checkPassword} = registerData
 
-  if(userAccount.length <= 4) {
-    console.log("用户名错误");
-    return;
-  }
-
-  if(userPassword.length <= 8) {
-    console.log("密码错误");
-    return;
-  }
-
-  if(checkPassword !== userPassword) {
-    console.log("确认密码错误");
-    return;
-  }
-
-  axios({
-    method: 'post',
-    url: '/user/register',
-    data: {
-      userAccount,
-      userPassword,
-      checkPassword
+    if(checkPassword !== userPassword) {
+      console.log("确认密码错误");
+      return;
     }
-  })
-      .then(function (response) {
-        router.push({
-          path: '/login',
-          query: {
-            userAccount
-          }
+
+    axios({
+      method: 'post',
+      url: '/user/register',
+      data: {
+        userAccount,
+        userPassword,
+        checkPassword
+      }
+    })
+        .then(function (response) {
+          router.push({
+            path: '/login',
+            query: {
+              userAccount
+            }
+          });
+        })
+        .catch(function (error) {
+          console.warn(error);
+          registerData.userPassword = '';
+          registerData.checkPassword = '';
         });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  }
+
 }
 </script>
 

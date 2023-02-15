@@ -1,5 +1,6 @@
 <template>
-  <div class="login-container-bg">
+  <Tooltip />
+  <div class="login-container-bg" @keydown="userLogin($event)">
     <div class="login-container">
       <div class="bg-pattern">
         <div></div>
@@ -26,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/utils/axios";
 import { useStore } from '@/store/index';
@@ -35,32 +37,36 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-let loginData = {
+let loginData = reactive({
   userAccount: route.query.userAccount ? route.query.userAccount : "",
   userPassword: ""
-}
+})
 
-function userLogin () {
-  let { userAccount, userPassword } = loginData
-  axios({
-    method: "post",
-    url: "/user/login",
-    data: {
-      userAccount,
-      userPassword
-    }
-  })
-      .then(function(response) {
-        console.log(response)
-        router.push({
-          path: "/user",
-          name: "user"
+function userLogin (event: any) {
+  if(event.keyCode === 13 || !event.keyCode) {
+    let { userAccount, userPassword } = loginData
+    axios({
+      method: "post",
+      url: "/user/login",
+      data: {
+        userAccount,
+        userPassword
+      }
+    })
+        .then(function(response) {
+          console.log(response)
+          router.push({
+            path: "/user",
+            name: "user"
+          })
+          store.addUser(response as unknown as UserInfo)
         })
-        store.addUser(response as unknown as UserInfo)
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+        .catch(function(error) {
+          console.warn(error)
+          loginData.userAccount = '';
+          loginData.userPassword = '';
+        })
+  }
 }
 </script>
 

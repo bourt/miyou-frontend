@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SaveBtn: typeof import('./src/components/SaveBtn/index.vue')['default']
+    Tooltip: typeof import('./src/components/Tooltip/index.vue')['default']
     VanCalendar: typeof import('vant/es')['Calendar']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
@@ -20,5 +21,6 @@ declare module '@vue/runtime-core' {
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
     VanTag: typeof import('vant/es')['Tag']
+    WarnBox: typeof import('./src/components/Tooltip/index.vue')['default']
   }
 }
