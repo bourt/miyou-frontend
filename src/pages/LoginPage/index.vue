@@ -43,7 +43,7 @@ let loginData = reactive({
 })
 
 function userLogin (event: any) {
-  if(event.keyCode === 13 || !event.keyCode) {
+  if(event.keyCode === 13 || event.type === 'click') {
     let { userAccount, userPassword } = loginData
     axios({
       method: "post",

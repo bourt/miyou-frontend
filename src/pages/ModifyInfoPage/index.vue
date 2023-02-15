@@ -11,35 +11,35 @@
         </div>
       </div>
       <van-field
-          v-model="value"
+          v-model="modifyValue.usename"
           label="昵称"
           :placeholder="userData.username || userData.userAccount"
           right-icon="edit"
           input-align="right"
       />
       <van-field
-          v-model="value"
+          v-model="modifyValue.sex"
           label="性别"
           :placeholder="userData.gender || '未设置'"
           right-icon="edit"
           input-align="right"
       />
       <van-field
-          v-model="value"
+          v-model="modifyValue.phoneNum"
           label="手机号"
           :placeholder="userData.phone || '未设置'"
           right-icon="edit"
           input-align="right"
       />
       <van-field
-          v-model="value"
+          v-model="modifyValue.email"
           label="邮箱"
           :placeholder="userData.email || '未设置'"
           right-icon="edit"
           input-align="right"
       />
       <van-field
-          v-model="value"
+          v-model="modifyValue.id"
           label="编号"
           :placeholder="userData.id || '未设置'"
           right-icon="edit"
@@ -51,18 +51,35 @@
   <SaveBtn title="保存" @click="saveData"/>
 </template>
 <script setup lang="ts">
-import {reactive, ref, Ref} from "vue";
-import { useStore } from '@/store/index'
+import { reactive } from "vue";
+import { useStore } from '@/store/index';
+import axios from '@/utils/axios';
 
 const store = useStore()
 let userData = reactive(store.userData)
 
+const modifyValue = reactive({
+  username: '',
+  sex: '',
+  phoneNum: '',
+  email: '',
+  id: ''
+})
 
-const saveData = () => {
-  console.log(1)
+const saveData = async () => {
+  try {
+    let data = await axios.post('/api/user/update', {
+      ...modifyValue
+    });
+  } catch(e: any) {
+    throw new Error(e)
+  }
 }
 
-const value = ref('');
+
+
+
+
 </script>
 <style>
   .modify-data-item {
