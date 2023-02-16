@@ -1,17 +1,19 @@
 <template>
   <header class="user-header">
     <div class="avatar-border">
-      <div class="avatar-container" @click="handlerRevise(isLogin)">
+      <div class="avatar-container">
         <img alt="" src="/src/assets/default-avatar.png">
       </div>
     </div>
-    <div class="user-info">
+    <div class="user-info" @click="handlerRevise(isLogin)">
       <div class="not-login" v-if="!isLogin">
         <router-link class="login-btn" to="/login">登录/注册</router-link>
         <span class="login-msg">登录即可为您匹配用户啦</span>
       </div>
       <div class="is-login" v-else>
-        <h2 class="username"><i>Hi，</i>{{ userData.username || userData.userAccount }}</h2>
+        <h2 class="username">
+          <i>Hi，</i>{{ userData.username || userData.userAccount }}<span class="edit-user-info"><van-icon name="edit" /></span>
+        </h2>
       </div>
     </div>
   </header>
@@ -123,5 +125,9 @@ if(Object.keys(userData).length) {
 .is-login .username i {
   color: var(--main-color);
   font-weight: bold;
+}
+
+.is-login .username .edit-user-info {
+  margin-left: 10px;
 }
 </style>

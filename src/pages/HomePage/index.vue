@@ -27,7 +27,7 @@ let userList;
 
 onMounted(async() => {
   try {
-    userList = await axios.get('/user/match')
+    userList = await axios.get('/user/match?num=3')
     console.log(userList)
   } catch (e: any) {
     throw new Error(e)

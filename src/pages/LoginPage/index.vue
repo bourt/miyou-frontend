@@ -54,7 +54,6 @@ function userLogin (event: any) {
       }
     })
         .then(function(response) {
-          console.log(response)
           router.push({
             path: "/user",
             name: "user"

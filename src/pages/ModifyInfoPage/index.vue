@@ -39,9 +39,8 @@
           input-align="right"
       />
       <van-field
-          v-model="modifyValue.id"
           label="编号"
-          :placeholder="userData.id || '未设置'"
+          :placeholder="`${userData.id}` || '未设置'"
           right-icon="edit"
           input-align="right"
       />
@@ -62,13 +61,12 @@ const modifyValue = reactive({
   username: '',
   sex: '',
   phoneNum: '',
-  email: '',
-  id: ''
+  email: ''
 })
 
 const saveData = async () => {
   try {
-    let data = await axios.post('/api/user/update', {
+    let data = await axios.post('/user/update', {
       ...modifyValue
     });
   } catch(e: any) {

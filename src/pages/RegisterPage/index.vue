@@ -42,7 +42,7 @@ const registerData = reactive({
 
 // 点击注册按钮调用的函数
 function handlerRegister(event: any) {
-  if(event.keyCode === 13 || !event.keyCode) {
+  if(event.keyCode === 13 || event.type === 'click') {
     let {userAccount, userPassword, checkPassword} = registerData
 
     if(checkPassword !== userPassword) {
