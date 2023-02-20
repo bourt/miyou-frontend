@@ -1,5 +1,4 @@
 <template>
-  <Tooltip />
   <div class="login-container-bg" @keydown="userLogin($event)">
     <div class="login-container">
       <div class="bg-pattern">
@@ -48,17 +47,22 @@ function userLogin (event: any) {
     axios({
       method: "post",
       url: "/user/login",
+      headers: {
+        'Access-Control-Allow-Origin':'*',
+        'Access-Control-Allow-Credentials':'true',
+        'Content-Type': 'application/json'
+      },
       data: {
         userAccount,
         userPassword
       }
     })
         .then(function(response) {
-          router.push({
-            path: "/user",
-            name: "user"
-          })
           store.addUser(response as unknown as UserInfo)
+          router.push({
+            path: "/",
+            name: "home"
+          })
         })
         .catch(function(error) {
           console.warn(error)

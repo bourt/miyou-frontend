@@ -1,11 +1,12 @@
 <template>
-    <van-nav-bar :title="miyouTitle" left-text="返回" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
+  <Tooltip :title="tipTitle" :key="tipTitle"/>
+  <van-nav-bar :title="miyouTitle" left-text="返回" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
         <template #right>
             <van-icon name="search" size="18" color="#fbc002" />
         </template>
     </van-nav-bar>
     <div class="content" :style="contentHeight">
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
     <van-tabbar v-model="active" active-color="#fbc002">
         <van-tabbar-item to="/" icon="home-o" name="home">主页</van-tabbar-item>
@@ -18,6 +19,12 @@
 import { ref, Ref, watch, onMounted } from "vue";
 import router from "@/router/index";
 import { useRoute } from "vue-router";
+import { useStore } from "@/store"
+import {storeToRefs} from "pinia";
+
+const store = storeToRefs(useStore())
+
+let tipTitle = ref(store.notice);
 
 // 初始化内容区域的高度
 let contentHeight = ref("height:" + (document.documentElement?.clientHeight - 96) + "px");

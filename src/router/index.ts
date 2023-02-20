@@ -1,5 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import {getToken} from "@/utils";
+import { reactive } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import { useStore, pinia } from '@/store';
+
 const home = () => import('@/pages/HomePage/index.vue')
 const team = () => import('@/pages/TeamPage/index.vue')
 const addTeam = () => import('@/pages/TeamPage/AddTeamPage.vue')
@@ -65,16 +67,20 @@ const router = createRouter({
     routes,
 })
 
+
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
     if (to.path == '/login' || to.path == '/register') {
         // 如果要去路径是 /login 则正常执行
         next()
     } else {
-        if(Boolean(getToken('token'))){
-            next()
+        const store = useStore(pinia);
+        const userData = store.userData!;
+        if(userData){
+            next();
         }else {
-            next()
+            next('/login')
+            // next();
         }
     }
 })

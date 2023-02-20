@@ -2,12 +2,12 @@
   <div class="homeContainer">
     <div class="user" v-for="(item, index) in userList" :key="index">
       <div class="user-bgc">
-        <img :src="item.avatar" alt="">
+        <img :src="item.avatarUrl" alt="">
       </div>
-      <h2 class="username">{{ item.username }}</h2>
+      <h2 class="username">{{ item.username || item.userAccount }}</h2>
       <div class="user-info">
         <div class="tags">
-          <span v-for="tag in item.tags">{{ tag.text }}</span>
+          <span v-for="tag in item.tags">{{ tag }}</span>
         </div>
         <div class="contact-me">
           <img src="./images/phone.png" alt="">
@@ -20,72 +20,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, Ref, onMounted, reactive } from 'vue';
 import axios from '@/utils/axios';
+import { type UserInfo} from "@/api/user";
 
-let userList;
+let userList: Array<UserInfo> = reactive([]);
 
 onMounted(async() => {
   try {
-    userList = await axios.get('/user/match?num=3')
-    console.log(userList)
+    let tempUserList = await axios.get('/user/match?num=10') as Array<UserInfo>
+    tempUserList.filter((item)=> {
+      item.tags = eval(item.tags!)
+      userList.push(item);
+    })
   } catch (e: any) {
     throw new Error(e)
   }
 })
-
-// let userList = [
-//   {
-//     avatar: "/src/assets/avatar1.png",
-//     username: "小cat",
-//     tags: [
-//       {text: "足球", id: "足球", color: ""},
-//       {text: "乒乓球", id: "乒乓球", color: ""},
-//       {text: "网球", id: "网球", color: ""},
-//       {text: "排球", id: "排球", color: ""},
-//     ]
-//   },
-//   {
-//     avatar: "/src/assets/avatar2.png",
-//     username: "小喜",
-//     tags: [
-//       {text: "詹姆斯", id: "詹姆斯", color: ""},
-//       {text: "威斯布鲁克", id: "威斯布鲁克", color: ""},
-//       {text: "蔡徐坤", id: "蔡徐坤", color: ""},
-//       {text: "杜兰特", id: "杜兰特", color: ""},
-//     ]
-//   },
-//   {
-//     avatar: "/src/assets/avatar3.png",
-//     username: "小鸭",
-//     tags: [
-//       {text: "webpack", id: "webpack", color: ""},
-//       {text: "react", id: "react", color: ""},
-//       {text: "皮尔斯", id: "皮尔斯", color: ""},
-//       {text: "库里", id: "库里", color: ""},
-//     ]
-//   },
-//   {
-//     avatar: "/src/assets/avatar4.png",
-//     username: "蓝祝安",
-//     tags: [
-//       {text: "vue", id: "vue", color: ""},
-//       {text: "springboot", id: "springboot", color: ""},
-//       {text: "蔡徐坤", id: "蔡徐坤", color: ""},
-//       {text: "java", id: "java", color: ""},
-//     ]
-//   },
-//   {
-//     avatar: "/src/assets/avatar5.png",
-//     username: "小迪",
-//     tags: [
-//       {text: "排球", id: "排球", color: ""},
-//       {text: "html", id: "html", color: ""},
-//       {text: "sass", id: "sass", color: ""},
-//       {text: "html", id: "html", color: ""},
-//     ]
-//   }
-// ]
 </script>
 
 <style scoped>

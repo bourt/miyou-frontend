@@ -44,6 +44,11 @@
           right-icon="edit"
           input-align="right"
       />
+      <van-cell title="退出登录" @click="logout">
+        <template #right-icon>
+          <van-icon name="share" class="share-icon" />
+        </template>
+      </van-cell>
     </van-cell-group>
 
   </div>
@@ -51,12 +56,16 @@
 </template>
 <script setup lang="ts">
 import { reactive } from "vue";
-import { useStore } from '@/store/index';
+import { useStore } from '@/store';
 import axios from '@/utils/axios';
+import { useRouter } from 'vue-router';
 
 const store = useStore()
-let userData = reactive(store.userData)
+const router = useRouter()
 
+let userData = reactive(store.userData!)
+
+// 收集修改数据
 const modifyValue = reactive({
   username: '',
   sex: '',
@@ -64,6 +73,19 @@ const modifyValue = reactive({
   email: ''
 })
 
+// 退出登录
+const logout = () => {
+  axios.post('/user/logout')
+      .then(() => {
+        store.deleteUser();
+        router.push('/login')
+      })
+      .catch(error => {
+        throw new Error(error)
+      })
+}
+
+// 保存修改数据
 const saveData = async () => {
   try {
     let data = await axios.post('/user/update', {
@@ -73,11 +95,6 @@ const saveData = async () => {
     throw new Error(e)
   }
 }
-
-
-
-
-
 </script>
 <style>
   .modify-data-item {
@@ -110,5 +127,11 @@ const saveData = async () => {
   .modify-avatar-content {
     display: flex;
     align-items: center;
+  }
+
+  .share-icon {
+    font-size: 20px;
+    line-height: inherit;
+    color: #bbbbbb;
   }
 </style>

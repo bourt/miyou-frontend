@@ -1,8 +1,13 @@
 import axios from 'axios';
 import type {AxiosResponse} from "axios";
+import {useStore} from "@/store";
+
+const store = useStore()
+
 
 axios.defaults.baseURL = "http://localhost:8080/api";
 axios.defaults.withCredentials = true;
+axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest';
 
 axios.interceptors.response.use(
     (response: AxiosResponse) => {
@@ -38,6 +43,7 @@ axios.interceptors.response.use(
                     err = code;
                     break
             }
+            store.updateNotice(err)
             return Promise.reject(err)
         }
     }, (error) => {

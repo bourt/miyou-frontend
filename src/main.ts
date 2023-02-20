@@ -1,12 +1,11 @@
 import '@/style.css'
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { pinia } from '@/store'
 import App from '@/App.vue'
 import vant from 'vant'
 import router from '@/router/index';
 
 const app = createApp(App)
-const pinia = createPinia()
 app.use(pinia)
 app.use(vant)
 app.use(router)
