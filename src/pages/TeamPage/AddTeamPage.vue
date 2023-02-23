@@ -187,7 +187,7 @@
       <div class="create-time-other">
         <span class="other-head">过期时间</span>
         <div class="select-expire-time">
-          <div class="expire-time" @click="show = true" >{{ date }}</div>
+          <div class="expire-time" @click="show = true" >{{ addTeamForm.expireTime }}</div>
           <van-calendar color="#fbc002" v-model:show="show" @confirm="onConfirm" />
         </div>
         <span class="other-head">最大人数</span>
@@ -217,10 +217,6 @@ import {useStore} from "@/store";
 
 const store = useStore();
 
-console.log(store.userData.id)
-
-const date = ref('请选择过期时间');
-
 // 增加最大人数事件处理函数
 const addNum = () => {
   if(addTeamForm.maxNum < 5) {
@@ -242,53 +238,61 @@ const reduceNum = () => {
   }
 }
 
-// 当前状态
-let nowStatus = ref(0);
-
-// 监听当前状态改变
-watch(nowStatus, (newValue, oldValue) => {
-  teamStatus[oldValue][1] = '';
-  teamStatus[newValue][1] = 'activeStatus';
-})
-
 // 状态列表
 let teamStatus = reactive([
-  ["公开", 'activeStatus'],
-  ["私有", ''],
+  ["私有", 'activeStatus'],
+  ["公开", ''],
   ["加密", '']
 ])
 
 // 确定是否为加密房间
-let isEncryption: Ref<boolean> = ref(false);
+let isEncryption: Ref<boolean> = ref(true);
 
 // 选择房间状态
 const selectTeamStatus = (status: number) => {
-  nowStatus.value = status;
-  status ===0 ? isEncryption.value = false : isEncryption.value = true;
+  addTeamForm.status = status;
+  status === 1 ? isEncryption.value = false : isEncryption.value = true;
 }
 
+// vant选择日历
 const show = ref(false);
 const formatDate = (date: Date) => `${date.getMonth() + 1}/${date.getDate()}`;
 const onConfirm = (value: Date) => {
   show.value = false;
-  date.value = formatDate(value);
+  addTeamForm.expireTime = `2023/${formatDate(value)} 16:40:50`;
 };
 
 // 收集添加团队数据
 const addTeamForm: AddTeam = reactive({
   "description": "",
-  "expireTime": date.value,
+  "expireTime": "请选择过期时间",
   "maxNum": 1,
   "name": "",
   "password": "",
-  "status": nowStatus.value,
-  "userId": store.userData.id
+  "status": 0,
+  "userId": store.userData!.id
 })
 
+watch(
+    () => addTeamForm.status,
+    (newValue, oldValue) => {
+        if(oldValue !== undefined) {
+          teamStatus[oldValue][1] = '';
+        }
+        teamStatus[newValue][1] = 'activeStatus';
+    },
+    { deep: true , immediate: true }
+)
+
 // 创建团队按钮点击事件函数
-const createTeam = () => {
-  axios.post('/team/add',{
-    ...addTeamForm
-  })
+const createTeam = async() => {
+  console.log(addTeamForm)
+  try {
+    const team = await axios.post('/team/add',{
+      ...addTeamForm
+    })
+  } catch(e) {
+    console.log(e)
+  }
 }
 </script>

@@ -10,6 +10,7 @@ const userModify = () => import('@/pages/ModifyInfoPage/index.vue')
 const search = () => import('@/pages/SearchPage/index.vue')
 const login = () => import('@/pages/LoginPage/index.vue')
 const register = () => import('@/pages/RegisterPage/index.vue')
+const otherUser = () => import('@/pages/OtherUserPage/index.vue')
 
 const routes = [
     {
@@ -59,6 +60,12 @@ const routes = [
         name: 'register',
         component: register,
         meta: { title: "注册" }
+    },
+    {
+        path: '/other-user',
+        name: 'other-user',
+        component: otherUser,
+        meta: {title: "" }
     }
 ]
 

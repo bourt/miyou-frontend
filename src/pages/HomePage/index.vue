@@ -1,6 +1,6 @@
 <template>
   <div class="homeContainer">
-    <div class="user" v-for="(item, index) in userList" :key="index">
+    <div class="user" v-for="(item, index) in userList" :key="index" @click="goUserHome(item)">
       <div class="user-bgc">
         <img :src="item.avatarUrl" alt="">
       </div>
@@ -20,9 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted, reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import axios from '@/utils/axios';
-import { type UserInfo} from "@/api/user";
+import { type UserInfo} from '@/api/user';
+import { useRouter } from 'vue-router';
+import { useStore } from '@/store'
+
+const router = useRouter();
+const store = useStore();
 
 let userList: Array<UserInfo> = reactive([]);
 
@@ -30,13 +35,19 @@ onMounted(async() => {
   try {
     let tempUserList = await axios.get('/user/match?num=10') as Array<UserInfo>
     tempUserList.filter((item)=> {
-      item.tags = eval(item.tags!)
+      item.tags = eval(item.tags!);
       userList.push(item);
     })
   } catch (e: any) {
     throw new Error(e)
   }
 })
+
+// 前往点击用户主页
+function goUserHome (userInfo: any) {
+  store.addOtherUser(userInfo)
+  router.push('other-user');
+}
 </script>
 
 <style scoped>

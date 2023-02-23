@@ -13,34 +13,34 @@
           <span>请选择队伍模式</span>
         </span>
         <div class="public-private">
-          <span :class="isChangeColor ? 'pub-pri-Bgc' : `public`" @click="changeBgc(true)">公开</span>
-          <span :class="isChangeColor ? 'private' : 'pub-pri-Bgc'" @click="changeBgc(false)">加密</span>
+          <span @click="changeBgc(0, $event)">我的</span>
+          <span :class="oldStatus ? '' : 'active-bgc'" @click="changeBgc(1, $event)">公开</span>
+          <span @click="changeBgc(2, $event)">加密</span>
         </div>
       </div>
       <div class="team-content">
-        <div class="team" v-for="(item, index) in isChangeColor ? publicList : privateList" :key="index">
+        <div class="team" v-for="(item, index) in currentList" :key="index">
           <div class="team-left">
             <div class="team-left-top">
               <div class="team-l-l">
-                <img :src="item.teamAvatar" alt="" />
+                <img src="@/assets/avatar1.png" alt="" />
               </div>
               <div class="team-l-r">
                 <div class="team-title">
                   <img src="./images/team-title.png" alt="">
-                  <span>{{ item.teamName }}</span>
+                  <span>{{ item.name }}</span>
                 </div>
                 <div class="team-comment">
                   <img src="./images/comment.png" alt="">
-                  <i>{{ item.teamComment }}</i>
+                  <i>{{ item.description }}</i>
                 </div>
               </div>
             </div>
             <div class="team-left-bottom">
-              <div>截止时间: {{ item.endTime }}</div>
-              <div>创建时间: {{ item.createTime }}</div>
-              <div class="team-status">
-                <span>{{ item.isPrivate ? "加密" : "公开" }}</span>
-                <span>队伍人数:{{ item.teamNowTotal + "/" + item.teamTotal }}</span>
+              <div>截止时间: {{ item.expireTime }}</div>
+B              <div class="team-status">
+                <span>{{ item.status ? "加密" : "公开" }}</span>
+                <span>队伍人数:{{ '1' + "/" + item.maxNum }}</span>
               </div>
             </div>
           </div>
@@ -63,56 +63,70 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, Ref, onMounted } from "vue";
+import axios from '@/utils/axios';
+import { type Team } from '@/api/team';
+import { useStore } from '@/store';
+import { storeToRefs } from 'pinia';
 
-interface Team {
-  teamAvatar: string;
-  teamName: string;
-  teamComment: string;
-  isPrivate: boolean;
-  teamTotal: number;
-  teamNowTotal: number;
-  endTime: string;
-  createTime: string;
-}
+const store = useStore();
+const { publicTeam, privateTeam, mineTeam } = storeToRefs(store);
 
-let teamList = [
-  {
-    teamAvatar: "/src/assets/blueDog.png",
-    teamName: "蓝狗军团",
-    teamComment: "继承了蓝狗和军官的意志--威斯blue克--军人的意志",
-    isPrivate: true,
-    teamTotal: 5,
-    teamNowTotal: 1,
-    endTime: "2022-12-31 23:27:50",
-    createTime: "2022-09-04 23:27:50"
-  },
-  {
-    teamAvatar: "/src/assets/kunkun.png",
-    teamName: "ikun后援团",
-    teamComment: "守护最好的坤坤",
-    isPrivate: false,
-    teamTotal: 5,
-    teamNowTotal: 1,
-    endTime: "2022-12-31 23:27:50",
-    createTime: "2022-09-04 23:27:50"
-  }
-]
 // 公开房间列表
-let publicList: Team[] = reactive(teamList.filter(item => {
-  return !item.isPrivate
-}))
+let publicList = publicTeam;
 // 隐私房间列表
-let privateList: Team[] = reactive(teamList.filter(item => {
-  return item.isPrivate
-}))
+let privateList = privateTeam;
+// 我的房间列表
+let mineList = mineTeam;
+// 当前状态房间
+let currentList = reactive(publicList);
 
-// 控制元素类名
-let isChangeColor: any = ref(true);
+onMounted(async () => {
+  try {
+    let team = (await axios.get('/team/list/page')).records
+    store.mineTeam = team.filter((item: any) => {
+      if(item.status === 0) {
+        return item
+      }
+    })
+    store.publicTeam = team.filter((item: any) => {
+      if(item.status === 1) {
+        return item
+      }
+    })
+    store.privateTeam = team.filter((item: any) => {
+      if(item.status === 2) {
+        return item
+      }
+    })
+  } catch (e) {
+    console.warn(e)
+  }
+})
 
 // 点击公开or私密按钮触发事件
-const changeBgc = (condition: boolean) => {
-  isChangeColor.value = condition
+let oldStatus: Ref<HTMLElement | null> = ref(null)
+const changeBgc = (status: number, event: MouseEvent) => {
+  if(oldStatus.value) {
+    oldStatus.value.className = ''
+  }
+  let span = event.target as HTMLElement
+  span.className = 'active-bgc'
+  oldStatus.value = span
+
+  switch (status) {
+    case 0:
+      currentList = mineList
+      break
+    case 1:
+      currentList = publicList
+      break
+    case 2:
+      currentList = privateList
+      break
+    default:
+      console.warn('获取错误')
+  }
 }
 
 // ==============vant====================
@@ -127,14 +141,15 @@ const onSearch = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: 50px;
   width: 50px;
   height: 50px;
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 0 4px #ddd;
+  z-index: 999;
 }
 
 .setWay-container {
@@ -170,7 +185,7 @@ const onSearch = () => {
   display: flex;
   margin-left: auto;
   padding: 2px;
-  width: 120px;
+  width: 180px;
   height: 30px;
   background-color: #fff;
   border-radius: 100px;
@@ -180,7 +195,7 @@ const onSearch = () => {
   user-select: none;
 }
 
-.pub-pri-Bgc {
+.active-bgc {
   background-color: var(--main-color);
   color: #fff;
 }

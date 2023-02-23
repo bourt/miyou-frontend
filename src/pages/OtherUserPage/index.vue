@@ -5,14 +5,10 @@
         <img alt="" src="/src/assets/default-avatar.png">
       </div>
     </div>
-    <div class="user-info" @click="handlerRevise(isLogin)">
-      <div class="not-login" v-if="!isLogin">
-        <router-link class="login-btn" to="/login">登录/注册</router-link>
-        <span class="login-msg">登录即可为您匹配用户啦</span>
-      </div>
-      <div class="is-login" v-else>
+    <div class="user-info">
+      <div class="is-login">
         <h2 class="username">
-          <i>Hi，</i>{{ userData.username || userData.userAccount }}<span class="edit-user-info"><van-icon name="edit" /></span>
+          {{ userData.username || userData.userAccount }}
         </h2>
       </div>
     </div>
@@ -28,30 +24,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, Ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from '@/store/index'
-import { storeToRefs } from 'pinia'
+import { reactive } from 'vue';
+import { useStore } from '@/store/index';
 
-const router = useRouter()
-const store = storeToRefs(useStore())
+const store = useStore();
 
-let userData = reactive(store.userData)
-let isLogin: Ref<boolean> = ref(false)
-
-// 修改用户数据函数
-const handlerRevise = (isLogin: boolean) => {
-  if (!isLogin) {
-    return
-  }
-  router.push({
-    path: "/user-modify"
-  })
-}
-
-if(Object.keys(userData).length) {
-  isLogin.value = true;
-}
+const userData = reactive(store.otherUser);
 </script>
 
 <style scoped>
