@@ -39,13 +39,13 @@
             <div class="team-left-bottom">
               <div>截止时间: {{ item.expireTime }}</div>
 B              <div class="team-status">
-                <span>{{ item.status ? "加密" : "公开" }}</span>
+                <span>{{ item.status === 0 ? "公开" : "加密" }}</span>
                 <span>队伍人数:{{ '1' + "/" + item.maxNum }}</span>
               </div>
             </div>
           </div>
           <div class="team-right">
-            <div class="team-control">
+            <div class="team-control" v-if="isMineTeam">
               <div class="update-team">
                 <img src="./images/updateTeam.png" alt="">
                 <span>更新队伍</span>
@@ -53,6 +53,12 @@ B              <div class="team-status">
               <div class="clear-team">
                 <img src="./images/usergroup-clear.png" alt="">
                 <span>解散队伍</span>
+              </div>
+            </div>
+            <div class="team-control" v-else>
+              <div class="join-team">
+                <img src="./images/加入.png" alt="">
+                <span>加入队伍</span>
               </div>
             </div>
           </div>
@@ -72,41 +78,34 @@ import { storeToRefs } from 'pinia';
 const store = useStore();
 const { publicTeam, privateTeam, mineTeam } = storeToRefs(store);
 
-// 公开房间列表
-let publicList = publicTeam;
-// 隐私房间列表
-let privateList = privateTeam;
-// 我的房间列表
-let mineList = mineTeam;
 // 当前状态房间
-let currentList = reactive(publicList);
+let currentList: Ref<Array<Team>> = reactive(publicTeam);
 
 onMounted(async () => {
   try {
     let team = (await axios.get('/team/list/page')).records
-    store.mineTeam = team.filter((item: any) => {
-      if(item.status === 0) {
-        return item
-      }
-    })
-    store.publicTeam = team.filter((item: any) => {
+    store.privateTeam = team.filter((item: any) => {
       if(item.status === 1) {
         return item
       }
     })
-    store.privateTeam = team.filter((item: any) => {
-      if(item.status === 2) {
+    store.publicTeam = team.filter((item: any) => {
+      if(item.status === 0) {
         return item
       }
     })
+    store.mineTeam = await axios.get('/team/list/my/create')
   } catch (e) {
     console.warn(e)
   }
 })
 
+let isMineTeam = ref(false);
+
 // 点击公开or私密按钮触发事件
 let oldStatus: Ref<HTMLElement | null> = ref(null)
 const changeBgc = (status: number, event: MouseEvent) => {
+  status === 0 ? isMineTeam.value = true : isMineTeam.value = false;
   if(oldStatus.value) {
     oldStatus.value.className = ''
   }
@@ -116,13 +115,13 @@ const changeBgc = (status: number, event: MouseEvent) => {
 
   switch (status) {
     case 0:
-      currentList = mineList
+      currentList = mineTeam
       break
     case 1:
-      currentList = publicList
+      currentList = publicTeam
       break
     case 2:
-      currentList = privateList
+      currentList = privateTeam
       break
     default:
       console.warn('获取错误')
@@ -131,8 +130,8 @@ const changeBgc = (status: number, event: MouseEvent) => {
 
 // ==============vant====================
 const value = ref('');
-const onSearch = () => {
-
+const onSearch = async () => {
+  let searchResult = await axios.get(`/team/get${value}`)
 }
 </script>
 
@@ -336,7 +335,8 @@ const onSearch = () => {
 }
 
 .update-team,
-.clear-team {
+.clear-team,
+.join-team {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -346,6 +346,8 @@ const onSearch = () => {
 }
 
 .team-control>div>img {
+  width: 30px;
+  height: 30px;
   margin-bottom: 5px;
 }
 </style>
